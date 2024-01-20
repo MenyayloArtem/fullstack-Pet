@@ -1,0 +1,13 @@
+@import "../deps/fonts.scss";
+@import "../deps/nullstyle.scss";
+@import "../deps/vars.scss";
+
+* {
+    box-sizing: border-box;
+}
+
+.row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}

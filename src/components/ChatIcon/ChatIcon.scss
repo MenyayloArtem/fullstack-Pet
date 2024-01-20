@@ -1,0 +1,31 @@
+$iconSize : 4.5vh;
+
+.chatIcon {
+    padding: 8px 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover, &.selected {
+      background: linear-gradient(315deg, #1a1a1a, #555);
+    }
+    
+
+
+    &__inner {
+      width: $iconSize;
+      height: $iconSize;
+      overflow: hidden;
+      border-radius: 100%;
+      border: 2px dashed white;
+      
+    }
+    
+
+  
+    &__img {
+      width: 100%;
+      height: 100%;
+    }
+  }

@@ -1,0 +1,28 @@
+@import "../../../../scss/deps/vars.scss";
+
+.chatTopMenu {
+    width: 100%;
+    
+    &__top {
+        padding: 0 25px;
+        padding-top: $padding;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__channelName {
+        display: flex;
+        font-size: 20px;
+        font-weight: 700;
+        color: #000;
+    }
+
+    &__widgets {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 20px;
+        width: 50%;
+    }
+}

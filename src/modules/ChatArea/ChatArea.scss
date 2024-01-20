@@ -1,0 +1,77 @@
+::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    width: 0px;
+    background-color: rgba(0,0,0,0);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #eee;
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #eee;
+  }
+  
+  ::-webkit-scrollbar-track-piece {
+    background-color: rgba(0,0,0,0);
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:vertical {
+    height: 50px;
+  }
+  
+  ::-webkit-scrollbar-thumb:horizontal {
+    width: 50px;
+  }
+  
+
+.chatArea {
+    width: 100%;
+    display: grid;
+    grid-template: auto 1fr 50px / 1fr;
+    
+    &__top {
+        padding: 10px 25px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 50px;
+    }
+
+    &__channelName {
+        display: flex;
+        font-size: 20px;
+        font-weight: 700;
+        color: #000;
+    }
+
+    &__widgets {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 20px;
+        width: 50%;
+    }
+
+    &__messages {
+        max-height: 100%;
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+        padding: 10px 25px;
+        background: url("https://phonoteka.org/uploads/posts/2021-04/1619485581_8-phonoteka_org-p-foni-iz-telegramma-8.jpg");
+    }
+
+    &__messagesWrapper {
+        width: 55%;
+        max-height: calc(86vh);
+        overflow-y: scroll;
+        padding-right: 10px;
+        
+    }
+}

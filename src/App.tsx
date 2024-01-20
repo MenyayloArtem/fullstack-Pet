@@ -1,26 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import AsideUserInfo from './modules/AsideUserInfo/AsideUserInfo';
+import ChatArea from './modules/ChatArea/ChatArea';
+import ChatMenu from './modules/ChatMenu/ChatMenu';
+import './scss/styles/index.scss';
+import "./App.scss"
+import { ChatMenuSelector } from './redux/slices/ChatMenuSlice';
+import { useSelector } from 'react-redux';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import Chat from './pages/Chat/Chat';
+import Main from './pages/Main/Main';
+import Api, { ApiRoutes } from './shared/Api';
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+  const auth = true
+
+  return <div className="app">
+    <Router>
+      <Routes>
+        <Route path="/" element={auth ? <Navigate to="/chats" /> : <Main />} />
+        <Route path="/chats" element={<Chat />} />
+      </Routes>
+    </Router>
+</div>
 }
+  
+
 
 export default App;

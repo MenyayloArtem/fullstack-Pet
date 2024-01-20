@@ -1,0 +1,44 @@
+.message {
+    display: flex;
+    font-size: 12px;
+    font-weight: 400;
+    color: #000;
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+
+    &__avatar {
+        min-width: 24px;
+        height: 24px;
+        background: navy;
+        border-radius: 3px;
+        margin-right: 10px;
+        overflow: hidden;
+
+        img {
+            max-width: 100%;
+        }
+    }
+
+    &__top {
+        display: flex;
+        gap: 6px;
+        
+    }
+
+    &__dispatchTime {
+        color: #8D8D8D;
+    }
+
+    &__user {
+        font-weight: 700;
+        color: #000;
+    }
+
+    &__text {
+        margin-top: 4px;
+        font-size: 13px;
+        line-height: 20px;
+    }
+}

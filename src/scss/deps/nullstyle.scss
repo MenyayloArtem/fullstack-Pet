@@ -1,0 +1,19 @@
+body {
+    overflow-x: hidden;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+ul, li {
+    list-style: none;
+}
+
+input, button {
+    background: none;
+    border: none;
+    outline: none;
+}

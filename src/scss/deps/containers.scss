@@ -1,0 +1,35 @@
+* [class$="container"] {
+    margin: 0 auto;
+    max-width: 1920px;
+
+    @media (max-width: 1280px) {
+        max-width: 1170px;
+    }
+
+    @media (max-width: 1024px) {
+        max-width: 920px;
+    }
+    
+    @media (max-width: 980px) {
+        max-width: 882px;
+    }
+
+    @media (max-width: 768px) {
+        max-width: 720px;
+    }
+
+    @media (max-width: 520px) {
+        width: 100%;
+        padding: 0;
+    }
+}
+
+* [class$="container-sm"] {
+    margin: 0 auto;
+    width: 520px;
+}
+
+* [class$="container-md"] {
+    margin: 0 auto;
+    width: 720px;
+}

@@ -1,0 +1,21 @@
+.leftMenuList {
+    width: 100%;
+  
+    &__row {
+      display: flex;
+      justify-content: space-between;
+      color: #919191;
+      font-size: 14px;
+    }
+  
+    &__title {
+      text-transform: uppercase;
+    }
+
+    &__list {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-row-gap: 12px;
+      padding: 20px 0;
+    }
+  }

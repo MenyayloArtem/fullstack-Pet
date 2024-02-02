@@ -10,11 +10,30 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'r
 import Chat from './pages/Chat/Chat';
 import Main from './pages/Main/Main';
 import Api, { ApiRoutes } from './shared/Api';
+import Socket from "./shared/Socket";
 
 
 function App() {
 
   const auth = true
+
+    useEffect(() => {
+        if (auth) {
+            let socket = new Socket()
+            socket.onOpen((connection) => {
+                console.log("Web Socket was connected!")
+            })
+        }
+    }, []);
+
+  useEffect(() => {
+    if (!Api.currentUser) {
+        Api.getCurrentUser()
+            .then(user => {
+              Api.currentUser = user
+            })
+    }
+  }, []);
 
   return <div className="app">
     <Router>

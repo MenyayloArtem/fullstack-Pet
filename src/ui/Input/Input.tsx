@@ -6,6 +6,7 @@ interface Props {
     placeholder? : string,
     after? : React.ReactNode,
     onInput : (text : string) => void,
+    elRef? : any,
     value : string
 }
 
@@ -16,6 +17,7 @@ function Input (props : Props) {
         placeholder={props.placeholder}
         value={props.value}
         onInput={(e : any) => props.onInput(e.target.value as string)}
+        ref={props.elRef}
         />
         <div className="Input__after">{
             props.after

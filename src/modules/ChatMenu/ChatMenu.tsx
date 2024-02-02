@@ -9,7 +9,7 @@ import LeftMenuList from "./components/LeftMenuList/LeftMenuList";
 import LeftMenuTop from "./components/ChatMenuTop/LeftMenuTop";
 import { IChat } from "../../shared/ChatApi";
 import { ChatActions, ChatSelector } from "../../redux/slices/ChatSlice";
-import { ChatPageActions, ChatPageSelector } from "../../redux/slices/ChatPageSlice";
+import {ChatPageActions, ChatPageSelector, FETCH_CHAT_DATA} from "../../redux/slices/ChatPageSlice";
 import { IUser } from "../../shared/User";
 
 interface Props {
@@ -27,6 +27,18 @@ function ChatMenu(props: Props) {
       console.log(user)
       dispatch(ChatPageActions.setSelectedUser(user))
   }, [])
+
+  const onChatItemClick = useCallback((chat : IChat) => {
+    if (chat.id != selectedChat?.id) {
+      dispatch(ChatPageActions.setSelectedChat(chat))
+    }
+  },[selectedChat?.id])
+
+  useEffect(() => {
+    if (selectedChat) {
+      dispatch({type : FETCH_CHAT_DATA, payload : selectedChat.id})
+    }
+  }, [selectedChat?.id]);
   
 
   return (
@@ -38,7 +50,7 @@ function ChatMenu(props: Props) {
               return <ChatIcon icon={chat.icon}
               key={chat.id}
               selected={selectedChat?.id == chat.id}
-              onClick={() => dispatch(ChatPageActions.setSelectedChat(chat))}
+              onClick={() => onChatItemClick(chat)}
               />
             })
           }

@@ -26,10 +26,10 @@ function AsideUserInfo(props : Props) {
 
             <div className="userInfo__main">
                 <div className="userInfo__name">
-                    {user.name} <div className="userItem__status"></div>
+                    {user.username} <div className="userItem__status"></div>
                 </div>
                 <div className="userInfo__desc">
-                    {user.username}
+                    {user.email}
                 </div>
 
                 <div className="userInfo__socials socials">

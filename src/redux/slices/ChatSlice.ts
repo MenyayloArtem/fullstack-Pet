@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IChat } from "../../shared/ChatApi";
-import IMessage from "../../shared/IMessage";
+import IMessage from "../../shared/Message";
 import { RootState } from "..";
 import { IUser } from "../../shared/User";
 
@@ -31,14 +31,15 @@ const Chat = createSlice({
             if (state.chat) {
                 let user : IUser = {
                     name : "test",
+                    email : "test",
                     username : "test",
                     id : 0
                 }
-                state.chat.messages.push({
-                    user,
-                    createdAt : String(Date.now()),
-                    text : payload
-                })
+                // state.chat.messages.push({
+                //     user,
+                //     createdAt : String(Date.now()),
+                //     text : payload
+                // })
             }
         }
     }

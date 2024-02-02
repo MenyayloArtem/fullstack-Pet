@@ -1,9 +1,22 @@
 import { IUser } from "./User";
 
-export interface Message {
-    id: number | null;
+export interface Media {
+    id : number,
+    description : string,
+    props : any,
+    type : string,
+    public : boolean,
+    sender : IUser,
+}
+export default interface IMessage {
+    id: number;
     content: string | null;
-    date_created: Date | null;
-    sender: IUser | null;
-    medias: any[] | null;
+    dateCreated: Date | null;
+    sender: IUser;
+    medias: Media[];
+}
+
+export interface RawMessage {
+    text : string,
+    media_ids : number[]
 }

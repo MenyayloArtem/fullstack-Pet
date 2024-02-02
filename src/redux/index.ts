@@ -3,7 +3,7 @@ import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
 import { createSlice } from "@reduxjs/toolkit";
 import { ChatMenuReducer } from "./slices/ChatMenuSlice";
 import createSagaMiddleware from "@redux-saga/core";
-import fetchUsersSaga from "./sagas/fetchUsers";
+import fetchUsersSaga from "./sagas/fetchData";
 import { rootSaga } from "./sagas";
 import { ChatReducer } from "./slices/ChatSlice";
 import { ChatPageReducer } from "./slices/ChatPageSlice";

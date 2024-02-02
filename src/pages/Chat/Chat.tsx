@@ -16,39 +16,15 @@ interface Props {
 function Chats (props : Props) {
     const dispatch = useDispatch()
     const chats = useSelector(ChatMenuSelector).chats
-    const selectedUser = useSelector(ChatPageSelector).selectedUser
+    const chatPage = useSelector(ChatPageSelector)
+    const selectedUser = chatPage.selectedUser
 
-    useEffect(() => {
-        Api.login({
-            "username" : "menyayloartem",
-            "password" : "1234"
-        })
-        .then((user) => {
-            console.log(user)
-        })
-        .finally(() => {
-            ChatApi.getMembers(2)
-            ChatApi.createChat({
-                "title" : "test title",
-                description : "test descr"
-            }, 1)
-            ChatApi.editChat({
-                title : "edited",
-                description : "edited"
-            },1)
-            ChatApi.getMembers(1)
-            ChatApi.addMember(1,2)
-            ChatApi.sendMessage(1, {
-                text : "new message",
-                media_ids : []
-            })
-        })
-        
-      }, [])
+    const messagesQueue = chatPage.messagesQueue
+    const errorMessages = chatPage.errorMessages
 
     useEffect(() => {
         dispatch(ChatPageActions.fetchData())
-    },[])
+      }, [])
 
     useEffect(() => {
         if (chats.length) {

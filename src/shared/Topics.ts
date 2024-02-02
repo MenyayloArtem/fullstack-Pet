@@ -1,13 +1,12 @@
 import Api, { ApiRoutes } from "./Api";
-import IMessage from "./IMessage";
-import { Message } from "./Message";
+import IMessage from "./Message";
 import { Section } from "./Section";
 
 export interface ITopic {
     id: number | null;
     title: string;
     section: Section;
-    topicMessages: Message[];
+    topicMessages: IMessage[];
     cliped: boolean;
     date_created: Date;
 }

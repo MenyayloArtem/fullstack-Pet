@@ -3,7 +3,7 @@ import {IUser} from '../../shared/User';
 import "./UserItem.scss"
 
 interface Props {
-    user : IUser,
+    user : any,
     onClick : (user : IUser) => void
 }
 
@@ -15,7 +15,7 @@ function UserItem(props : Props) {
                 <img src="../../assets/images/Avatar.png" alt=''/>
             </div>
             <div className="userItem__name">
-                {props.user.name}
+                {props.user.username}
             </div>
         </div>
     );

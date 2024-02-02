@@ -1,11 +1,39 @@
 .chatInput {
     width: 100%;
+    height: 100%;
     display: flex;
-    align-items: center;
-    gap: 18px;
-    padding: 10px 25px;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 6px 15px;
+    //gap: 18px;
+
+    &__fileInput {
+        position: relative;
+        display: flex;
+        align-items: center;
+
+        input {
+            position: absolute;
+            visibility: hidden;
+        }
+    }
+
+    &__row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+
+        &.img {
+            gap: 6px;
+        }
+    }
 
     &__input {
         width: 100%;
+    }
+
+    img {
+        max-height: 50px;
     }
 }

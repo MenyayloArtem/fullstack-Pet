@@ -8,6 +8,15 @@
     border-radius: 10px;
     margin-bottom: 12px;
 
+    &__row {
+        display: flex;
+        align-items: center;
+    }
+
+    &.error {
+        background: #f19c9c;
+    }
+
     &__avatar {
         min-width: 24px;
         height: 24px;
@@ -40,5 +49,9 @@
         margin-top: 4px;
         font-size: 13px;
         line-height: 20px;
+    }
+
+    img {
+        max-width: 100%;
     }
 }

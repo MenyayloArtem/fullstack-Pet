@@ -1,4 +1,5 @@
 import { IUser } from "./User"
+import Socket from "./Socket"
 
 export interface Credentials {
     password : string,
@@ -20,6 +21,12 @@ export default class Api {
 
     public static hostUrl = "http://localhost:3001/"
     public static apiUrl = this.hostUrl + "api/"
+    public static uploadUrl = this.hostUrl + "upload"
+    public static mediasUrl = this.hostUrl + "media"
+    public static socketUrl = "ws://localhost:3002"
+
+    public static currentUser : IUser|null = null
+    public static SocketConnection : WebSocket|null = null
 
     public static makeUrl (route : ApiRoutes|string, template? : any, prefix = Api.apiUrl) {
         if (template) {
@@ -54,15 +61,30 @@ export default class Api {
             }
 
             if (requestOptions.payload) {
+                if (requestOptions.payload instanceof FormData) {
+                    options.body = (requestOptions.payload)
+                    options.headers = undefined
+                } else {
                     options.body = JSON.stringify(requestOptions.payload)
+                }
+
             }
 
-            console.log(requestOptions)
-            let data = await fetch(requestOptions.url, options)
-            return await data.json()
-        } catch (e) {
-            console.log((e as any).message)
-            return "" as any
+            let res = await fetch(requestOptions.url, options)
+            if (res.status === 401) {
+                return Api.login()
+                    .then(async () => {
+                        return await fetch(requestOptions.url, options)
+
+                    })
+                    .then(async (res) => {
+                        return await res.json()
+                    })
+
+            }
+            return await res.json()
+        } catch (e : any) {
+            throw new Error(e.message as any)
         }
 
     }
@@ -99,10 +121,41 @@ export default class Api {
         return data
     }
 
-    static async login (credentials : Credentials) {
+    static async login () {
+        let credentials = {
+                "username" : "menyayloartem",
+                "password" : "1234"
+        }
+
         return Api.post<IUser>(Api.hostUrl + ApiRoutes.Login, {
             payload : credentials
+        }).then((user : any) => {
+            if (!Api.currentUser) {
+                Api.currentUser = user.user
+            }
+            return user
         })
+    }
+
+    static async upload (file : File) {
+        const formData = new FormData()
+        formData.append("file", file)
+        // let res = await fetch('http://localhost:3001/upload', {
+        //     method: 'POST',
+        //     body: formData,
+        //     credentials : "include"
+        // })
+        // return await res.json()
+        return Api.post(this.uploadUrl, {
+            payload : formData
+        }).then(res => {
+            formData.delete("file")
+            return res
+        })
+    }
+
+    static async getCurrentUser () {
+        return Api.get(Api.makeUrl(ApiRoutes.User))
     }
 }
 
@@ -122,6 +175,7 @@ export enum ApiRoutes {
     Members = "chatMembers",
     Membership = "checkMembership",
     Message = "messages",
+    MessagesGet = "messagesGet",
     Topic = "topic",
     TopicMessage = "topic/:topicId/message",
     Section = "secton"

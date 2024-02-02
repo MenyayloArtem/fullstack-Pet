@@ -2,6 +2,7 @@ import Api, { ApiRoutes } from "./Api"
 
 export interface IUser {
     id : number,
+    email : string,
     avatar? : string,
     name : string,
     username : string,

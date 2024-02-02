@@ -1,8 +1,21 @@
-import Api, { ApiRoutes } from "./Api";
-import { IChannel } from "./Channel";
-import IMessage from "./IMessage";
-import { IUser } from "./User";
-import { testChats } from "./testData";
+import Api, {ApiRoutes} from "./Api";
+import {IChannel} from "./Channel";
+import IMessage, {RawMessage} from "./Message";
+import {IUser} from "./User";
+
+interface MessageRes {
+    id: number;
+    sender: {
+        username: string;
+        id: number;
+        email: string;
+        userIdentifier: string;
+        roles: string[];
+        password: string;
+    };
+    content: string;
+    reply_message: any;
+}
 
 export interface IChat {
     id : number,
@@ -12,11 +25,6 @@ export interface IChat {
     messages : IMessage[],
     title : string,
     description : string
-}
-
-interface RawMessage {
-    text : string,
-    media_ids : number[]
 }
 
 export interface RawChat {
@@ -36,12 +44,6 @@ export async function fetchChannels () : Promise<IChannel[]> {
     return channels
 } 
 
-export async function fetchChats() : Promise<IChat[]> {
-    // let data = await fetch("https://jsonplaceholder.typicode.com/photos")
-    // let chats = await data.json()
-    // return chats.slice(0,10)
-    return testChats
-}
 
 export default class ChatApi {
     public static async fetchChannels () {
@@ -92,11 +94,11 @@ export default class ChatApi {
         })
     }
 
-    public static async deleteMember (chat : IChat, member : IUser) {
+    public static async deleteMember (chat_id : number, member_id : number) {
         return await Api.delete<IChat[]>(Api.makeUrl(ApiRoutes.Members), {
             payload : {
-                chat_id : chat.id,
-                member_id : member.id
+                chat_id : chat_id,
+                member_id : member_id
             }
             
         })
@@ -120,7 +122,16 @@ export default class ChatApi {
 
     // Messages
 
-    public static async sendMessage (chatId : number,message : RawMessage) {
+    public static async getMessages (chatId : number, page = 1)  {
+        return await Api.post<IMessage[]>(Api.makeUrl(ApiRoutes.MessagesGet), {
+            payload : {
+                chat_id : chatId,
+                page
+            }
+        })
+    }
+
+    public static async sendMessage (chatId : number,message : RawMessage): Promise<MessageRes> {
         return await Api.post(Api.makeUrl(ApiRoutes.Message), {
             payload : {
                 chat_id : chatId,

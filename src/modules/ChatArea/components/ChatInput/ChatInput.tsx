@@ -65,17 +65,7 @@ function ChatInput (props : Props) {
 
     }, [text, uploadedImages, inputRef.current]);
 
-    useEffect(() => {
 
-        socket.onMessage((res) => {
-            let data = JSON.parse(res?.data)
-
-            if (data.chatId == selectedChat?.id) {
-                dispatch(ChatPageActions.addMessage(data.message))
-            }
-
-        })
-    }, [selectedChat]);
 
     function onImageInput (e : any) {
         const img = (e.target.files[0])

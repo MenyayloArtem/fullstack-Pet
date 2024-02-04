@@ -1,65 +1,99 @@
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 
-interface Args<T> {
-    initialPage? : number,
-    loadFn : (page? : number) => Promise<T[]>,
-    onLoad : (items : T[]) => void,
-    onScroll? : (e : any) => void,
-    resetDeps : any[]
-}
-export default function <T>(args : Args<T>) {
-    const [page, setPage] = useState(args.initialPage || 0)
+export default function (
+    loadFn : (page : number) => Promise<any[]|undefined>,
+    deps : any[],
+    items : any[]
+) {
+    const [page, setPage] = useState(1)
     const [fetching, setFetching] = useState(false)
     const [canLoadMore, setCanLoadMore] = useState(true)
     const blockRef = useRef<any>()
+    const [loadedOnce, setLoadedOnce] = useState(false)
+    const [canScroll, setCanScroll] = useState(true)
 
-    useEffect(() => {
-        // eslint-disable-next-line no-mixed-operators
-        if (!fetching && canLoadMore || page === 0) {
+    const load = useCallback(async (pg? : number) => {
+        if (!fetching && canLoadMore) {
             setFetching(true)
-            args.loadFn(page)
+            loadFn(pg || page)
                 .then(res => {
-                    if (!res.length) {
-                        console.log("stop")
-                        setCanLoadMore(false)
+                    if (res) {
+                        setLoadedOnce(true)
+                        console.log(res)
+                        if (!res.length) {
+                            setCanLoadMore(false)
+                        }
                     }
-                    args.onLoad(res)
+
                     setFetching(false)
                     return res
                 })
-                .finally(() => {
-                    setFetching(false)
-                })
         }
-    }, [page,fetching,canLoadMore])
+    },[page, fetching, canLoadMore, ...deps, loadedOnce])
+
+    useEffect(() => {
+        console.log("reset")
+        setLoadedOnce(false)
+        setPage(1)
+        setCanLoadMore(true)
+        setFetching(false)
+    }, [...deps]);
+
+    useEffect(() => {
+        console.log([page, fetching, canLoadMore, ...deps, loadedOnce])
+        if (!loadedOnce) {
+            setPage(1)
+        }
+
+        if (!loadedOnce && page == 1) {
+            load(1)
+        }
+    }, [page, fetching, canLoadMore, ...deps, loadedOnce]);
+
+    const scrollHandler = useCallback((e : any) => {
+        if (e.target.scrollTop <= 200) {
+            if (items.length) {
+
+                if (!fetching && canLoadMore) {
+                    load(page + 1)
+                        .then(() => {
+                            setPage(p => p + 1)
+                        })
+                }
+
+            }
+        }
+    }, [page, fetching, canLoadMore, items, loadedOnce])
 
     useEffect(() => {
         if (blockRef.current) {
             const el : HTMLElement = blockRef.current
 
-            const scrollHandler = (e : any) => {
-                if (e.target.scrollTop <= 100) {
-                    e.preventDefault()
-                    setPage(p => p + 1)
-                }
+            el.addEventListener("scroll", scrollHandler)
 
-                if (args.onScroll) {
-                    args.onScroll(e)
+            return () => el.removeEventListener("scroll", scrollHandler)
+        }
+    }, [blockRef.current, page, fetching, canLoadMore, items, loadedOnce]);
+
+    useEffect(() => {
+        if (blockRef.current) {
+            const el = blockRef.current
+            const g = (e : any) => {
+                if (e.target.scrollTop == e.target.scrollHeight - e.target.clientHeight) {
+                    setCanScroll(true)
+                } else {
+                    setCanScroll(false)
                 }
             }
 
-            el.addEventListener("scroll", scrollHandler)
-            return () => el.removeEventListener("scroll", scrollHandler)
+            el.addEventListener("scroll", g)
+            return () => el.removeEventListener("scroll", g)
         }
     }, [blockRef.current]);
 
     useEffect(() => {
-        setFetching(false)
-        setCanLoadMore(true)
-        setPage(0)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        console.log("reset")
-    }, [...args.resetDeps, args.loadFn]);
+        setCanScroll(true)
+    }, [...deps]);
 
-    return [blockRef]
+    return [blockRef as any, canScroll, setCanScroll]
 }

@@ -90,7 +90,7 @@ function* fetchUserWorker (action : PayloadAction<any>)  {
 function* fetchChatData (action : PayloadAction<any>) {
     try {
         yield spawn(getMembers,action.payload)
-        yield spawn(getMessages, action.payload)
+        // yield spawn(getMessages, action.payload)
     } catch (e) {
 
     }

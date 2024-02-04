@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Message from '../../components/Message/Message';
 import Counter from '../../ui/Counter/Counter';
 import Input from '../../ui/Input/Input';
@@ -14,7 +14,6 @@ import useSize from "../../hooks/useSize";
 import ChatApi from "../../shared/ChatApi";
 import usePageLoad from "../../hooks/usePageLoad";
 import IMessage from "../../shared/Message";
-import Socket from "../../shared/Socket";
 
 interface Props {
 
@@ -24,44 +23,77 @@ function ChatArea(props : Props) {
     const dispatch = useDispatch()
     const chatRedux = useSelector(ChatSelector)
     const chatPageRedux = useSelector(ChatPageSelector)
-    const messages = useMemo(() =>chatPageRedux.selectedChat?.messages || [],[chatPageRedux.selectedChat?.messages])
+    const messages = chatPageRedux.selectedChat?.messages || []
+    const chatRef = useRef<any>()
     const [wasScrolled, setWasScrolled] = useState<boolean>(false)
     const [sizer, setSizer] = useState<number>()
-    const [newMessages,setNewMessages] = useState(0)
-    const [size, sizerRef] = useSize()
-    const socket = new Socket()
+    const [canScroll, setCanScroll] = useState(true)
+    const [canLoadMore, setcanLoadMore] = useState(true)
+    const [fetching, setFetching] = useState(false)
 
-    const [blockRef, canScroll] = usePageLoad(
-        async (page) => {
-            if (chatPageRedux.selectedChat?.id) {
-                return ChatApi.getMessages(chatPageRedux.selectedChat.id, page)
-                    .then((loadedMessages) => {
-                        if (loadedMessages.length) {
-                            dispatch(ChatPageActions.setMessages([...loadedMessages,...messages]))
-                        }
-                        return loadedMessages
-                    })
-            }
-        },
-        [chatPageRedux.selectedChat?.id],
-        messages
-    )
+    // const sizerRef = useRef<any>()
+    const [size, sizerRef] = useSize()
+
+    const [page, setPage] = useState<number>(1)
+
+    async function fetchMessages () {
+        if (chatPageRedux.selectedChat?.id && page > 1 && canLoadMore && !fetching) {
+            setFetching(true)
+            ChatApi.getMessages(chatPageRedux.selectedChat.id, page)
+                .then(res => {
+
+                    if (res.length) {
+                        chatRedux.chatRef!.scrollBy(0,50)
+                        dispatch(ChatPageActions.setMessages([...res, ...messages]))
+                        setTimeout(() => {
+
+                            chatRedux.chatRef!.scrollBy(0,-50)
+                        },0)
+
+                    } else {
+                        setcanLoadMore(false)
+                    }
+                }).finally(() => {
+                    setFetching(false)
+            })
+        }
+
+    }
 
     useEffect(() => {
-        socket.onMessage((res) => {
-            let data = JSON.parse(res?.data)
+        fetchMessages()
+    }, [page, canLoadMore, fetching]);
 
-            if (data.chatId === chatPageRedux.selectedChat?.id) {
-                dispatch(ChatPageActions.addMessage(data.message))
+
+    useEffect(() => {
+        if (!chatRedux.chatRef && chatRef.current && sizer) {
+            dispatch(ChatActions.setChatRef(chatRef.current))
+        }
+
+        if (chatRef.current) {
+
+            // @ts-ignore
+            function scrollHandler (e : any) {
+                if (e.target.scrollTop <= 100) {
+                    e.preventDefault()
+                    setPage(p => p + 1)
+                }
+
+                // if (e.target.scrollTop <= 20 && chatRedux?.chatRef) {
+                //     (chatRedux.chatRef as any).scrollBy(0,100)
+                // }
+
+                if (e.target.scrollHeight <= e.target.scrollTop + e.target.clientHeight) {
+                    setCanScroll(true)
+                } else {
+                    setCanScroll(false)
+                }
             }
+            chatRef.current.addEventListener("scroll",scrollHandler)
 
-            if (!canScroll) {
-                setNewMessages(m => m + 1)
-            }
-        })
-    }, [chatPageRedux.selectedChat, canScroll]);
-
-
+            return () => chatRef.current.removeEventListener("scroll", scrollHandler)
+        }
+    }, [chatRef.current, sizer])
 
     useEffect(() => {
         if (size?.width) {
@@ -70,17 +102,14 @@ function ChatArea(props : Props) {
     }, [size]);
 
     useEffect(() => {
-        if (canScroll) {
-            setNewMessages(0)
-        }
+        console.log(canScroll)
     }, [canScroll]);
 
-
     useEffect(() => {
-        if (messages.length && !wasScrolled && blockRef.current) {
+        if (messages.length && !wasScrolled && chatRedux.chatRef) {
             setTimeout(() => {
                 if (canScroll) {
-                    scrollToBottom(blockRef.current as any)
+                    scrollToBottom(chatRedux.chatRef as any)
                     setWasScrolled(true)
                 }
             }, 0)
@@ -96,15 +125,9 @@ function ChatArea(props : Props) {
 
         <ChatTopMenu />
 
-            {!!newMessages && <div className="chatArea__circle"
-            onClick={() => scrollToBottom(chatRedux.chatRef as any)}
-            >
-                {newMessages}
-            </div>}
-
         <div className="chatArea__messages">
             <div className="chatArea__messagesWrapper"
-            ref={blockRef}
+            ref={chatRef}
             >
                 <div className="message sizer">
                     <div className="sizer" style={{width : "100%"}} ref={sizerRef}></div>

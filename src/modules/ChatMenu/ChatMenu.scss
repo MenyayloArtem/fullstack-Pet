@@ -2,21 +2,23 @@
 
 .chat__menu {
   width: 100%;
-  background-image: url("../../assets/images/mountains.jpg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-blend-mode: color;
+  //background-image: url("../../assets/images/mountains.jpg");
+  //background-position: center;
+  //background-repeat: no-repeat;
+  //background-size: cover;
+  //background-blend-mode: color;
+  background: #f0f0f0;
 }
 
 .chatMenu {
   display: flex;
   width: 100%;
   height: 100%;
-  color: $grayColor;
-  backdrop-filter: blur(8px);
+  color: #000;
+  //backdrop-filter: blur(8px);
 
   &__aside {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -24,19 +26,25 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.9);
     padding-top: 50px;
+
+    .logout {
+      position: absolute;
+      bottom: 50px;
+      font-size: 32px;
+      color: #fff;
+    }
   }
 
   &__body {
+
+    @include light-block;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     position: relative;
-    padding: 0 25px;
-    padding-top: $padding;
-    padding-bottom: 0;
+
     // width: calc(100% - 70px);
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.45);
   }
 
   &__lists {
@@ -54,4 +62,8 @@
     height: 100%;
     z-index: -1;
   }
+}
+
+.currentUser {
+  margin-bottom: 50px;
 }

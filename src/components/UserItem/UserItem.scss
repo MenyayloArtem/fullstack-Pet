@@ -1,27 +1,55 @@
+@import "../../scss/deps/vars.scss";
+$stRadius : 8px;
+
 .userItem {
     width: 100%;
-    height: 38px;
     display: flex;
     align-items: center;
+    background: $blueColor;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    //border-radius: 4px;
 
-    &__status {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #70CC16;
+    @include light-block(8px 15px, $blueColor);
+
+    &.outlined {
+        border: 1px solid $blueColor;
+        background: #fff;
+        color: $blueColor;
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+
+        .userItem__avatar img {
+            border: 1px solid $blueColor;
+        }
+    }
+
+    &__group {
+        display: flex;
+        align-items: center;
+        gap: 4px;
     }
 
     &__avatar {
+        position: relative;
         width: 38px;
         height: 38px;
-        border-radius: 8px;
-        background: navy;
         margin-left: 10px;
-        overflow: hidden;
 
         img {
+            border-radius: 100%;
             width: 100%;
         }
+    }
+
+    &__status {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: $stRadius;
+        height: $stRadius;
+        border-radius: 50%;
+        background: #70CC16;
     }
 
     &__name {

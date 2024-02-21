@@ -14,6 +14,7 @@ export default interface IMessage {
     dateCreated: Date | null;
     sender: IUser;
     medias: Media[];
+    reply_message? : IMessage
 }
 
 export interface RawMessage {

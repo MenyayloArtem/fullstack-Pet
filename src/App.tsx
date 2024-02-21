@@ -1,21 +1,26 @@
-import React, { useEffect } from 'react';
-import AsideUserInfo from './modules/AsideUserInfo/AsideUserInfo';
+import React, {useEffect, useState} from 'react';
+import RightMenu from './modules/RightMenu/RightMenu';
 import ChatArea from './modules/ChatArea/ChatArea';
 import ChatMenu from './modules/ChatMenu/ChatMenu';
-import './scss/styles/index.scss';
+// import './scss/styles/index.scss';
 import "./App.scss"
-import { ChatMenuSelector } from './redux/slices/ChatMenuSlice';
-import { useSelector } from 'react-redux';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {} from "react-router"
+import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import Chat from './pages/Chat/Chat';
 import Main from './pages/Main/Main';
 import Api, { ApiRoutes } from './shared/Api';
 import Socket from "./shared/Socket";
-
+import ModalRouter from "./modals/ModalRouter";
+import {AppActions, AppSelector} from "./redux/slices/AppSlice";
 
 function App() {
 
-  const auth = true
+  const [auth, setAuth] = useState(false)
+    // const navigate = useNavigate()
+    const user = useSelector(AppSelector).currentUser
+    const dispatch = useDispatch()
+    const [fetching, setFetching] = useState(true)
 
     useEffect(() => {
         if (auth) {
@@ -27,20 +32,47 @@ function App() {
     }, []);
 
   useEffect(() => {
-    if (!Api.currentUser) {
-        Api.getCurrentUser()
-            .then(user => {
-              Api.currentUser = user
-            })
-    }
-  }, []);
+    if (!user) {
+        try {
+            Api.getCurrentUser()
+                .then(user => {
+                    if (user) {
+                        Api.currentUser = user
+                        dispatch(AppActions.setCurrentUser(user))
+                    }
+                })
+                .catch(() => {
+                    console.log("err")
+                })
+                .finally(() => {
+                    setFetching(false)
+                })
+        } catch (e) {
+            dispatch(AppActions.setCurrentUser(null))
+        }
 
-  return <div className="app">
+    }
+  }, [])
+
+    useEffect(() => {
+        if (user) {
+            setAuth(true)
+        } else {
+            setAuth(false)
+        }
+    }, [user]);
+
+  // @ts-ignore
+    return <div className="app">
     <Router>
-      <Routes>
-        <Route path="/" element={auth ? <Navigate to="/chats" /> : <Main />} />
-        <Route path="/chats" element={<Chat />} />
-      </Routes>
+            <ModalRouter />
+          <Routes>
+              <Route path="/" element={auth ? <Navigate to="/chats"/> : <Main fetching={fetching}/>}/>
+
+              {/*@ts-ignore*/}
+              <Route path={"/chats"} element={auth ? <Chat /> : <Navigate to={"/"}/>} isAuthenticated={Boolean(auth)} />
+              <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
     </Router>
 </div>
 }

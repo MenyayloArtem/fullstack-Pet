@@ -1,10 +1,14 @@
 import React from 'react';
 import "./Button.scss"
+import {ClipLoader} from "react-spinners";
 
 interface Props {
     onClick? : Function,
     children? : React.ReactNode,
-    className? : string
+    className? : string,
+    small? : boolean,
+    stretched? : boolean,
+    fetching? : boolean
 }
 
 function Button (props : Props) {
@@ -13,10 +17,10 @@ function Button (props : Props) {
             props.onClick()
         }
     }
-    return <div className={`Button ${props.className}`}
+    return <div className={`Button ${props.small ? "small" : ""} ${props.className || ""} ${props.stretched ? "stretched" : ""}`}
     onClick={onClick}
     >
-        {props.children}
+        {props.fetching ? <ClipLoader size={20} color={"#fff"}/> : props.children}
     </div>
 }
 

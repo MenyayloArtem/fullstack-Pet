@@ -1,0 +1,35 @@
+@import "../../scss/deps/vars.scss";
+
+body {
+  background: $grayColor;
+  height: 100vh;
+
+}
+
+.mainPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  &__inner {
+    h1 {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+    display: flex;
+    flex-direction: column;
+    //align-items: center;
+    width: 100%;
+    gap: 8px;
+  }
+
+  &__form {
+    @include light-block;
+    border-radius: 4px;
+    width: 500px;
+    height: 400px;
+    margin-top: -100px;
+  }
+}

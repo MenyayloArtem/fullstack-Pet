@@ -1,9 +1,17 @@
 @import url("../../scss/styles/global.scss");
+@import "../../scss/deps/vars.scss";
 
+.asideMenu {
+    padding-top: 20px;
+    position: relative;
 
-.userInfo {
-    background: rgb(255,255,255);
-    background: linear-gradient(150deg, rgba(255,255,255,1) 0%, rgba(140,199,212,1) 100%);
+    &__back {
+        position: absolute;
+        top: 5px;
+        font-size: 32px;
+    }
+
+    @include light-block;
 
     &__avatar {
         display: flex;

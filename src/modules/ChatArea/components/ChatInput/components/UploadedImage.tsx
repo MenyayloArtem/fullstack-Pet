@@ -1,17 +1,18 @@
 import React from "react"
 import Api from "../../../../../shared/Api";
 import "./UploadedImage.scss"
+import {Media} from "../../../../../shared/Message";
 
 interface Props {
-    imageId : number,
+    media : Media,
     onClick? : Function,
-    onRemove : (imgId : number) => void
+    onRemove : (media : Media) => void
 }
 function UploadedImage(props : Props) {
-    const { imageId, onClick, onRemove} = props
+    const { media, onClick, onRemove} = props
     return <div className="uploadedImage" onClick={() => onClick ? onClick() : null}>
-        <img src={`${Api.mediasUrl}/${imageId}`} alt="" className="uploadedImage__image"/>
-        <div className="uploadedImage__remove" onClick={() => onRemove(imageId)}>
+        <img src={`${Api.mediasUrl}/${media.id}`} alt="" className="uploadedImage__image"/>
+        <div className="uploadedImage__remove" onClick={() => onRemove(media)}>
             X
         </div>
     </div>

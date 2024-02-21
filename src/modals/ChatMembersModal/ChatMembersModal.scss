@@ -1,0 +1,10 @@
+.chatMembersModal {
+  &__list {
+    margin-top: 24px;
+    height: 240px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}

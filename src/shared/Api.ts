@@ -1,6 +1,11 @@
 import { IUser } from "./User"
 import Socket from "./Socket"
+import {RedirectFunction} from "react-router-dom";
 
+let devCredentials = {
+    "username" : "menyayloartem",
+    "password" : "1234"
+}
 export interface Credentials {
     password : string,
     username : string
@@ -37,7 +42,7 @@ export default class Api {
         return prefix + route
     }
 
-    private static async makeRequest<T = any> (requestOptions : RequestOptions) : Promise<T> {
+    private static async makeRequest<T = any> (requestOptions : RequestOptions, relogin = true) : Promise<T> {
 
         try {
             const options : RequestInit = {
@@ -72,14 +77,18 @@ export default class Api {
 
             let res = await fetch(requestOptions.url, options)
             if (res.status === 401) {
-                return Api.login()
-                    .then(async () => {
-                        return await fetch(requestOptions.url, options)
+                console.log("redirect")
+                // Api.currentUser = "unauth"
+                // Api.navigateFn("/")
 
-                    })
-                    .then(async (res) => {
-                        return await res.json()
-                    })
+                // return Api.login()
+                //     .then(async () => {
+                //         return await fetch(requestOptions.url, options)
+                //
+                //     })
+                //     .then(async (res) => {
+                //         return await res.json()
+                //     })
 
             }
             return await res.json()
@@ -97,10 +106,10 @@ export default class Api {
         return data
     }
 
-    static async post<T> (url : string, options : AdditionOptions) : Promise<T> {
+    static async post<T> (url : string, options : AdditionOptions, relogin = true) : Promise<T> {
         const data = await Api.makeRequest<T>({
             method : Methods.POST, url, ...options
-        })
+        }, relogin)
 
         return data
     }
@@ -121,19 +130,22 @@ export default class Api {
         return data
     }
 
-    static async login () {
-        let credentials = {
-                "username" : "menyayloartem",
-                "password" : "1234"
-        }
+    static async login (credentials : Credentials) {
+
 
         return Api.post<IUser>(Api.hostUrl + ApiRoutes.Login, {
             payload : credentials
-        }).then((user : any) => {
+        }, false).then((user : any) => {
             if (!Api.currentUser) {
                 Api.currentUser = user.user
             }
             return user
+        })
+    }
+
+    static async logout () {
+        return Api.post(Api.hostUrl + ApiRoutes.Logout, {}).then((user : any) => {
+            Api.currentUser = null
         })
     }
 
@@ -168,13 +180,17 @@ export enum Methods {
 
 export enum ApiRoutes {
     Login = "login",
+    Logout = "logout",
+    LeaveChat = "leaveChat",
     GetChats = "user/chats",
+    GetAllUsers = "users",
     GetUser = "user/:userId",
     User = "user",
     Chats = "chat",
     Members = "chatMembers",
     Membership = "checkMembership",
     Message = "messages",
+    SearchMessage = "searchMessages",
     MessagesGet = "messagesGet",
     Topic = "topic",
     TopicMessage = "topic/:topicId/message",

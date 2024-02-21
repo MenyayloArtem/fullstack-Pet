@@ -1,25 +1,20 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { PayloadAction } from "@reduxjs/toolkit/dist/createAction";
-import { createSlice } from "@reduxjs/toolkit";
-import { ChatMenuReducer } from "./slices/ChatMenuSlice";
 import createSagaMiddleware from "@redux-saga/core";
-import fetchUsersSaga from "./sagas/fetchData";
 import { rootSaga } from "./sagas";
-import { ChatReducer } from "./slices/ChatSlice";
 import { ChatPageReducer } from "./slices/ChatPageSlice";
-
-const initialState : {arr : any[]} = {
-    arr : []
-}
+import {AsideMenuReducer} from "../modules/RightMenu/store/AsideMenuSlice";
+import {ModalReducer} from "../modals/store/ModalSlice";
+import {AppReducer} from "./slices/AppSlice";
 
 const sagaMiddleware = createSagaMiddleware()
 const middleware = [sagaMiddleware]
 
 export const store = configureStore({
     reducer : {
-        Chat : ChatReducer,
-        ChatMenu : ChatMenuReducer,
-        ChatPage : ChatPageReducer
+        App : AppReducer,
+        ChatPage : ChatPageReducer,
+        AsideMenu : AsideMenuReducer,
+        Modal : ModalReducer
     },
 
     middleware : (g) => {

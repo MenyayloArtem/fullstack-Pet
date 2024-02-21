@@ -28,3 +28,8 @@ export default class Socket {
         this.connection.send(data)
     }
 }
+
+export enum SocketMessageTypes {
+    NewMessage = "NewMessage",
+    EditMessage =  "EditMessage"
+}

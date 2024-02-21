@@ -9,6 +9,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import path from 'path';
 import Main from './pages/Main/Main';
 import Chat from './pages/Chat/Chat';
+import ModalRouter from "./modals/ModalRouter";
 
 // const router = createBrowserRouter([{
 //   path : "/",

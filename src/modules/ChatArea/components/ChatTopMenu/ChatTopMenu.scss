@@ -3,12 +3,24 @@
 .chatTopMenu {
     width: 100%;
     
-    &__top {
-        padding: 0 25px;
-        padding-top: $padding;
+    &__row {
+        @include light-block;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        border-bottom: 1px solid silver;
+    }
+
+    &__buttons {
+        display : flex;
+        align-items: center;
+        gap : 4px;
+
+        .clear {
+            margin-left: 4px;
+            color: #ccc;
+            font-size: 28px;
+        }
     }
 
     &__channelName {

@@ -1,4 +1,43 @@
+@import "../../scss/deps/vars.scss";
+
+.message__outer {
+    padding: 6px 12px;
+
+    &.selected {
+        background: rgba(0,128,196, 0.9);
+    }
+}
+
+.replyMessage {
+    position: relative;
+    width: 100%;
+    margin-top: 6px;
+    background: rgba(#3577EF, 0.1);
+    border-left: 3px solid #3577EF;
+    padding: 2px 2px 2px 12px;
+
+    &__sender {
+        font-size: 12px;
+        color: #3577EF;
+        font-weight: 600;
+    }
+
+    &__content {
+        margin-top: 2px;
+        font-size: 10px;
+    }
+
+    &__after {
+        position: absolute;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+    }
+}
+
 .message {
+    @include  light-block;
+    margin: 0;
     display: flex;
     font-size: 12px;
     font-weight: 400;
@@ -6,7 +45,10 @@
     background: #fff;
     padding: 10px;
     border-radius: 10px;
-    margin-bottom: 12px;
+
+    &__col {
+        width: 100%;
+    }
 
     &__row {
         display: flex;
@@ -46,6 +88,7 @@
     }
 
     &__text {
+        width: 100%;
         margin-top: 4px;
         font-size: 13px;
         line-height: 20px;

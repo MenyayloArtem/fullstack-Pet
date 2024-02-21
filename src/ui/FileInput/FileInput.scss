@@ -1,0 +1,56 @@
+.fileInput {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    visibility: hidden;
+  }
+
+  &.clipPreset {
+
+  }
+
+  &.photoPreset {
+    border: 2px solid #3577EF;
+    width: 100%;
+    height: 200px;
+
+    img, svg {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+.loadedImage {
+  position: relative;
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  &:hover .loadedImage__black {
+    visibility: visible;
+  }
+
+  &__black {
+    visibility: hidden;
+    z-index: 999;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+    color: #fff;
+  }
+}

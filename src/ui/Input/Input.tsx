@@ -7,13 +7,15 @@ interface Props {
     after? : React.ReactNode,
     onInput : (text : string) => void,
     elRef? : any,
-    value : string
+    value : string,
+    stretched? : boolean,
+    type? : "text"|"password"
 }
 
 function Input (props : Props) {
-    return <div className={`Input ${props.className}`}>
-        <input type="text" 
-        className="Input__input"
+    return <div className={`Input ${props.className || ""} ${props.stretched ? "stretched" : ""}`}>
+        <input type={props.type || "text"}
+        className={`Input__input`}
         placeholder={props.placeholder}
         value={props.value}
         onInput={(e : any) => props.onInput(e.target.value as string)}

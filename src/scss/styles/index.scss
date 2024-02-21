@@ -5,13 +5,22 @@
 body {
     margin: 0 auto;
     font-family: "Lato", Arial, Helvetica, sans-serif;
+    background: $grayColor;
+    //padding: $calcMargin;
 }
 
-.chat {
-    display: grid;
-    grid-template-columns: 25% 1fr 300px;
-}
-
-.chat > * {
-    height: 100vh;
-}
+//.app {
+//    height: 100vh;
+//}
+//
+//.chat {
+//    display: grid;
+//    grid-template-columns: 25% 1fr 300px;
+//    grid-gap: $calcMargin;
+//
+//    padding: $calcMargin;
+//}
+//
+//.chat > * {
+//
+//}

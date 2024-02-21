@@ -16,6 +16,7 @@ function SmallPopup(props : Props) {
             const bodyRect = document.body.getBoundingClientRect()
             let newRect = el.getBoundingClientRect()
             setRect(newRect)
+            console.log(newRect)
         } else {
             throw new Error(`Element with id ${props.targetElId} not found`)
         }
@@ -24,7 +25,8 @@ function SmallPopup(props : Props) {
     return (rect) ? <div className="smallPopup"
                        ref={popupRef}
     style={{
-        top : `${rect.y - (props?.offsetY || 0)}px`,
+        // top : `${rect.y - (props?.offsetY || 0)}px`,
+        // left : `${rect.x}px`,
         pointerEvents : "none"
     }}
     >

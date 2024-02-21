@@ -1,7 +1,19 @@
 // Colors
 
-$grayColor : #B5B5B5;
+$grayColor : #f0f0f0;
 $darkColor : #25272A;
 $lightColor : #fff;
-$blueColor : #3577EF;
+$blueColor : #4b8cff;
+$redColor : #fa5151;
 $padding : 3vh;
+
+$md : 1024px;
+
+$calcMargin : calc($padding - 25px / 2);
+
+@mixin light-block($p : $padding / 2 25px,$color : #fff) {
+  background: $color;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+  padding: $p;
+  //margin: calc($padding - 25px / 2) 0 calc($padding - 25px / 2) calc($padding - 25px / 2);
+}

@@ -1,6 +1,6 @@
 import Api, {ApiRoutes} from "./Api";
 import {IChannel} from "./Channel";
-import IMessage, {RawMessage} from "./Message";
+import IMessage, {Media, RawMessage} from "./Message";
 import {IUser} from "./User";
 
 interface MessageRes {
@@ -21,15 +21,17 @@ export interface IChat {
     id : number,
     members : IUser[],
     channels : IChannel[],
-    icon : string,
+    icon : Media,
     messages : IMessage[],
     title : string,
     description : string
+    membersCount : number
 }
 
 export interface RawChat {
     title : string,
-    description : string
+    description : string,
+    media_id? : number
 }
 
 export async function fetchFriends () : Promise<IUser[]> {
@@ -57,10 +59,14 @@ export default class ChatApi {
         return await Api.get<IChat[]>(Api.makeUrl(ApiRoutes.GetChats))
     }
 
+    public static async getAllUsers () {
+        return await Api.get<IUser[]>(Api.makeUrl(ApiRoutes.GetAllUsers))
+    }
+
     // Chats
 
-    public static async createChat (chat : RawChat, mediaId: number) {
-        return await Api.post(Api.makeUrl(ApiRoutes.Chats), {
+    public static async createChat (chat : RawChat, mediaId?: number) {
+        return await Api.post<IChat>(Api.makeUrl(ApiRoutes.Chats), {
             payload : {
                 chat : {
                     title : chat.title,
@@ -72,7 +78,7 @@ export default class ChatApi {
     }
 
     public static async editChat (chat : RawChat, chatId : number) {
-        return await Api.post(Api.makeUrl(ApiRoutes.Chats), {
+        return await Api.patch<IChat>(Api.makeUrl(ApiRoutes.Chats), {
             payload : {
                 chat_id : chatId,
                 chat : {
@@ -100,7 +106,14 @@ export default class ChatApi {
                 chat_id : chat_id,
                 member_id : member_id
             }
-            
+        })
+    }
+
+    public static async leaveChat (chat_id : number) {
+        return await Api.delete<IChat[]>(Api.makeUrl(ApiRoutes.LeaveChat), {
+            payload : {
+                chat_id : chat_id
+            }
         })
     }
 
@@ -136,6 +149,15 @@ export default class ChatApi {
             payload : {
                 chat_id : chatId,
                 message
+            }
+        })
+    }
+
+    public static async searchMessages (chatId : number, text : string) {
+        return await Api.post<IMessage[]>(Api.makeUrl(ApiRoutes.SearchMessage), {
+            payload : {
+                chat_id : chatId,
+                text
             }
         })
     }

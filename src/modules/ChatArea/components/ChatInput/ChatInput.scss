@@ -1,22 +1,11 @@
+@import "../../../../scss/deps/vars.scss";
+
 .chatInput {
-    width: 100%;
-    height: 100%;
+    //position: relative;
+    @include light-block;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    padding: 6px 15px;
-    //gap: 18px;
-
-    &__fileInput {
-        position: relative;
-        display: flex;
-        align-items: center;
-
-        input {
-            position: absolute;
-            visibility: hidden;
-        }
-    }
+    justify-content: space-around;
 
     &__row {
         width: 100%;
@@ -36,4 +25,9 @@
     img {
         max-height: 50px;
     }
+}
+
+.inputReply {
+    margin-bottom: 12px;
+    padding: 8px 6px 8px 12px;
 }

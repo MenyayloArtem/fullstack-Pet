@@ -1,87 +1,65 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import Message from '../../components/Message/Message';
-import Counter from '../../ui/Counter/Counter';
-import Input from '../../ui/Input/Input';
 import "./ChatArea.scss"
 import ChatInput from './components/ChatInput/ChatInput';
 import ChatTopMenu from './components/ChatTopMenu/ChatTopMenu';
 import { useDispatch, useSelector } from 'react-redux';
-import { ChatMenuSelector } from '../../redux/slices/ChatMenuSlice';
-import { ChatActions, ChatSelector } from '../../redux/slices/ChatSlice';
 import scrollToBottom from '../../helpers/scrollToBottom';
 import {ChatPageActions, ChatPageSelector} from '../../redux/slices/ChatPageSlice';
 import useSize from "../../hooks/useSize";
 import ChatApi from "../../shared/ChatApi";
-import usePageLoad from "../../hooks/usePageLoad";
-import IMessage from "../../shared/Message";
+import useFetching from "../../hooks/useFetching";
+import Socket, {SocketMessageTypes} from "../../shared/Socket";
 
-interface Props {
-
-}
-
-function ChatArea(props : Props) {
+function ChatArea() {
     const dispatch = useDispatch()
-    const chatRedux = useSelector(ChatSelector)
     const chatPageRedux = useSelector(ChatPageSelector)
-    const messages = chatPageRedux.selectedChat?.messages || []
+    const messages = useMemo(() => chatPageRedux.selectedChat?.messages || [],[chatPageRedux.selectedChat])
+    const searchedMessages = chatPageRedux.searchedMessages
+    const selectedChat = chatPageRedux.selectedChat
+    const newMessages = chatPageRedux.newMessages
     const chatRef = useRef<any>()
     const [wasScrolled, setWasScrolled] = useState<boolean>(false)
     const [sizer, setSizer] = useState<number>()
     const [canScroll, setCanScroll] = useState(true)
-    const [canLoadMore, setcanLoadMore] = useState(true)
-    const [fetching, setFetching] = useState(false)
-
-    // const sizerRef = useRef<any>()
     const [size, sizerRef] = useSize()
+    const socket = new Socket()
 
-    const [page, setPage] = useState<number>(1)
-
-    async function fetchMessages () {
-        if (chatPageRedux.selectedChat?.id && page > 1 && canLoadMore && !fetching) {
-            setFetching(true)
-            ChatApi.getMessages(chatPageRedux.selectedChat.id, page)
-                .then(res => {
-
-                    if (res.length) {
-                        chatRedux.chatRef!.scrollBy(0,50)
-                        dispatch(ChatPageActions.setMessages([...res, ...messages]))
-                        setTimeout(() => {
-
-                            chatRedux.chatRef!.scrollBy(0,-50)
-                        },0)
-
-                    } else {
-                        setcanLoadMore(false)
+    const [setCanFetching, resetFetching] = useFetching(
+        (page) => ChatApi.getMessages(chatPageRedux.selectedChat!.id, page)
+            .then(async (res) => {
+                if (res.length) {
+                    dispatch(ChatPageActions.setMessages([...res, ...messages]))
+                } else {
+                    if (page === 1) {
+                        dispatch(ChatPageActions.setMessages([]))
                     }
-                }).finally(() => {
-                    setFetching(false)
+                }
+                return res
             })
-        }
-
-    }
+    )
 
     useEffect(() => {
-        fetchMessages()
-    }, [page, canLoadMore, fetching]);
-
+        // @ts-ignore
+        resetFetching()
+        setCanScroll(true)
+        if (chatPageRedux.selectedChat?.id) {
+            setCanFetching(true)
+        }
+    }, [chatPageRedux.selectedChat?.id]);
 
     useEffect(() => {
-        if (!chatRedux.chatRef && chatRef.current && sizer) {
-            dispatch(ChatActions.setChatRef(chatRef.current))
-        }
+        console.log(messages)
+    }, [messages]);
 
+    useEffect(() => {
         if (chatRef.current) {
-
             // @ts-ignore
             function scrollHandler (e : any) {
                 if (e.target.scrollTop <= 100) {
                     e.preventDefault()
-                    setPage(p => p + 1)
+                    setCanFetching(true)
                 }
-
-                // if (e.target.scrollTop <= 20 && chatRedux?.chatRef) {
-                //     (chatRedux.chatRef as any).scrollBy(0,100)
-                // }
 
                 if (e.target.scrollHeight <= e.target.scrollTop + e.target.clientHeight) {
                     setCanScroll(true)
@@ -89,9 +67,9 @@ function ChatArea(props : Props) {
                     setCanScroll(false)
                 }
             }
-            chatRef.current.addEventListener("scroll",scrollHandler)
 
-            return () => chatRef.current.removeEventListener("scroll", scrollHandler)
+            chatRef.current.addEventListener("scroll",scrollHandler)
+            return () => chatRef.current?.removeEventListener("scroll", scrollHandler)
         }
     }, [chatRef.current, sizer])
 
@@ -102,26 +80,59 @@ function ChatArea(props : Props) {
     }, [size]);
 
     useEffect(() => {
-        console.log(canScroll)
-    }, [canScroll]);
+        if (messages.length && !wasScrolled && chatRef.current) {
+            if (canScroll) {
+                scrollToBottom(chatRef.current as any)
+                setWasScrolled(true)
+            }
+        }
+    },[wasScrolled,messages,chatPageRedux.selectedChat?.id, canScroll, newMessages])
 
     useEffect(() => {
-        if (messages.length && !wasScrolled && chatRedux.chatRef) {
-            setTimeout(() => {
-                if (canScroll) {
-                    scrollToBottom(chatRedux.chatRef as any)
-                    setWasScrolled(true)
-                }
-            }, 0)
+        if (canScroll) {
+            dispatch(ChatPageActions.setNewMessages(0))
         }
-    },[wasScrolled,messages,chatPageRedux.selectedChat?.id, canScroll])
+    }, [canScroll]);
 
     useEffect(() => {
         setWasScrolled(false)
     },[chatPageRedux.selectedChat])
 
+    useEffect(() => {
+        socket.onMessage((res) => {
+            let data = JSON.parse(res?.data)
+            console.log(data)
+            switch (data?.type) {
+                case SocketMessageTypes.NewMessage : {
+                    if (data.chatId === selectedChat?.id) {
+                        dispatch(ChatPageActions.addMessage(data.message))
+                        if (!canScroll) {
+                            dispatch(ChatPageActions.addNewMessages())
+                        }
+                    }
+                    break
+                }
+                case SocketMessageTypes.EditMessage : {
+                    if (data.chatId === selectedChat?.id) {
+                        dispatch(ChatPageActions.replaceMessage({
+                            message : data.message,
+                            id : data.message.id
+                        }))
+                    }
+                    break
+                }
+            }
+        })
+    }, [selectedChat, canScroll]);
+
+    useEffect(() => {
+        return () => {
+            dispatch(ChatPageActions.clear())
+        }
+    }, []);
+
     return (
-        <main className="chat__body chatArea">
+        <main className="chatArea">
 
         <ChatTopMenu />
 
@@ -133,17 +144,23 @@ function ChatArea(props : Props) {
                     <div className="sizer" style={{width : "100%"}} ref={sizerRef}></div>
                 </div>
 
+                {
+                    !!sizer && searchedMessages.length === 0 &&
+                    messages.map((message) => <Message message={message} key={message.id} sizer={sizer}/>)
+                }
 
                 {
-
-                !!sizer && messages.map((message) => <Message message={message} key={message.id} sizer={sizer}/>)
-                }
+                  !!sizer && !!searchedMessages.length &&
+                 searchedMessages.map((message) => <Message message={message} key={message.id} sizer={sizer}/>)
+               }
             </div>
-            
+
         </div>
-
-        <ChatInput />
-
+            {!!chatPageRedux.newMessages && <div className="chatArea__scrollBottom"
+            onClick={() => scrollToBottom(chatRef.current as any)}>
+                {chatPageRedux.newMessages}
+            </div>}
+        <ChatInput chatRef={chatRef.current}/>
     </main>
     );
 }

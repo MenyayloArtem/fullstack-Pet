@@ -1,0 +1,178 @@
+2024-01-25 11:16:12 pid:10721 Workerman[index.php] start in DEBUG mode
+2024-01-25 11:17:31 pid:10721 Workerman[index.php] stopping ...
+2024-01-25 11:17:31 pid:10721 Workerman[index.php] has been stopped
+2024-01-25 11:17:54 pid:11457 Workerman[index.php] start in DEBUG mode
+2024-01-25 11:18:19 pid:11457 Workerman[index.php] stopping ...
+2024-01-25 11:18:19 pid:11457 Workerman[index.php] has been stopped
+2024-01-25 11:18:26 pid:11493 Workerman[index.php] start in DEBUG mode
+2024-01-25 11:23:59 pid:11493 Workerman[index.php] stopping ...
+2024-01-25 11:23:59 pid:11493 Workerman[index.php] has been stopped
+2024-01-25 11:24:00 pid:11892 Workerman[index.php] start in DEBUG mode
+2024-01-25 12:09:47 pid:11892 Workerman[index.php] stopping ...
+2024-01-25 12:09:47 pid:11892 Workerman[index.php] has been stopped
+2024-01-25 12:10:03 pid:13440 Workerman[index.php] start in DEBUG mode
+2024-01-25 12:13:05 pid:13440 Workerman[index.php] stopping ...
+2024-01-25 12:13:05 pid:13440 Workerman[index.php] has been stopped
+2024-01-25 12:13:06 pid:13553 Workerman[index.php] start in DEBUG mode
+2024-01-25 12:13:26 pid:13554 Error: Access to undeclared static property Workerman\Worker::$connections in /home/myubuntu/Box/PhpTest/test/workerman/index.php:21
+Stack trace:
+#0 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Connection/TcpConnection.php(646): {closure}()
+#1 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Events/Select.php(311): Workerman\Connection\TcpConnection->baseRead()
+#2 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1635): Workerman\Events\Select->loop()
+#3 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1426): Workerman\Worker::forkOneWorkerForLinux()
+#4 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1400): Workerman\Worker::forkWorkersForLinux()
+#5 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(560): Workerman\Worker::forkWorkers()
+#6 /home/myubuntu/Box/PhpTest/test/workerman/index.php(33): Workerman\Worker::runAll()
+#7 {main}
+2024-01-25 12:13:26 pid:13553 worker[none:13554] exit with status 64000
+2024-01-25 12:14:31 pid:13553 Workerman[index.php] stopping ...
+2024-01-25 12:14:31 pid:13553 Workerman[index.php] has been stopped
+2024-01-25 12:14:32 pid:13639 Workerman[index.php] start in DEBUG mode
+2024-01-25 12:15:39 pid:13639 Workerman[index.php] stopping ...
+2024-01-25 12:15:39 pid:13639 Workerman[index.php] has been stopped
+2024-01-25 12:15:40 pid:13713 Workerman[index.php] start in DEBUG mode
+2024-01-25 12:18:57 pid:13713 Workerman[index.php] stopping ...
+2024-01-25 12:18:57 pid:13713 Workerman[index.php] has been stopped
+2024-01-25 12:18:59 pid:13956 Workerman[index.php] start in DEBUG mode
+2024-01-25 12:19:23 pid:13957 Error: Call to undefined method Closure::send() in /home/myubuntu/Box/PhpTest/test/workerman/index.php:25
+Stack trace:
+#0 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Connection/TcpConnection.php(646): {closure}()
+#1 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Events/Select.php(311): Workerman\Connection\TcpConnection->baseRead()
+#2 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1635): Workerman\Events\Select->loop()
+#3 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1426): Workerman\Worker::forkOneWorkerForLinux()
+#4 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1400): Workerman\Worker::forkWorkersForLinux()
+#5 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(560): Workerman\Worker::forkWorkers()
+#6 /home/myubuntu/Box/PhpTest/test/workerman/index.php(39): Workerman\Worker::runAll()
+#7 {main}
+2024-01-25 12:19:23 pid:13956 worker[none:13957] exit with status 64000
+2024-01-25 12:21:10 pid:13956 Workerman[index.php] stopping ...
+2024-01-25 12:21:10 pid:13956 Workerman[index.php] has been stopped
+2024-01-25 12:21:13 pid:14064 Workerman[index.php] start in DEBUG mode
+2024-01-25 12:21:31 pid:14065 Error: Call to undefined method Closure::send() in /home/myubuntu/Box/PhpTest/test/workerman/index.php:26
+Stack trace:
+#0 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Connection/TcpConnection.php(646): {closure}()
+#1 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Events/Select.php(311): Workerman\Connection\TcpConnection->baseRead()
+#2 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1635): Workerman\Events\Select->loop()
+#3 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1426): Workerman\Worker::forkOneWorkerForLinux()
+#4 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1400): Workerman\Worker::forkWorkersForLinux()
+#5 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(560): Workerman\Worker::forkWorkers()
+#6 /home/myubuntu/Box/PhpTest/test/workerman/index.php(40): Workerman\Worker::runAll()
+#7 {main}
+2024-01-25 12:21:31 pid:14064 worker[none:14065] exit with status 64000
+2024-01-25 12:24:20 pid:14064 Workerman[index.php] stopping ...
+2024-01-25 12:24:20 pid:14064 Workerman[index.php] has been stopped
+2024-01-25 12:24:37 pid:14149 Workerman[index.php] start in DEBUG mode
+2024-01-25 13:09:32 pid:14149 Workerman[index.php] stopping ...
+2024-01-25 13:09:32 pid:14149 Workerman[index.php] has been stopped
+2024-01-25 13:09:32 pid:15356 Workerman[index.php] start in DEBUG mode
+2024-01-25 13:26:36 pid:15356 Workerman[index.php] stopping ...
+2024-01-25 13:26:36 pid:15356 Workerman[index.php] has been stopped
+2024-01-25 13:26:37 pid:16097 Workerman[index.php] start in DEBUG mode
+2024-01-25 13:27:52 pid:16097 Workerman[index.php] stopping ...
+2024-01-25 13:27:52 pid:16097 Workerman[index.php] has been stopped
+2024-01-25 13:27:52 pid:16148 Workerman[index.php] start in DEBUG mode
+2024-01-25 13:28:16 pid:16148 Workerman[index.php] stopping ...
+2024-01-25 13:28:16 pid:16148 Workerman[index.php] has been stopped
+2024-01-25 13:28:17 pid:16181 Workerman[index.php] start in DEBUG mode
+2024-01-25 13:28:26 pid:16182 TypeError: json_decode(): Argument #1 ($json) must be of type string, Workerman\Connection\TcpConnection given in /home/myubuntu/Box/PhpTest/test/workerman/index.php:26
+Stack trace:
+#0 /home/myubuntu/Box/PhpTest/test/workerman/index.php(26): json_decode()
+#1 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Connection/TcpConnection.php(646): {closure}()
+#2 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Events/Select.php(311): Workerman\Connection\TcpConnection->baseRead()
+#3 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1635): Workerman\Events\Select->loop()
+#4 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1426): Workerman\Worker::forkOneWorkerForLinux()
+#5 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1400): Workerman\Worker::forkWorkersForLinux()
+#6 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(560): Workerman\Worker::forkWorkers()
+#7 /home/myubuntu/Box/PhpTest/test/workerman/index.php(41): Workerman\Worker::runAll()
+#8 {main}
+2024-01-25 13:28:26 pid:16181 worker[none:16182] exit with status 64000
+2024-01-25 13:28:35 pid:16207 TypeError: json_decode(): Argument #1 ($json) must be of type string, Workerman\Connection\TcpConnection given in /home/myubuntu/Box/PhpTest/test/workerman/index.php:26
+Stack trace:
+#0 /home/myubuntu/Box/PhpTest/test/workerman/index.php(26): json_decode()
+#1 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Connection/TcpConnection.php(646): {closure}()
+#2 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Events/Select.php(311): Workerman\Connection\TcpConnection->baseRead()
+#3 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1635): Workerman\Events\Select->loop()
+#4 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1426): Workerman\Worker::forkOneWorkerForLinux()
+#5 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1400): Workerman\Worker::forkWorkersForLinux()
+#6 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1785): Workerman\Worker::forkWorkers()
+#7 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(1721): Workerman\Worker::monitorWorkersForLinux()
+#8 /home/myubuntu/Box/PhpTest/test/workerman/vendor/workerman/workerman/Worker.php(562): Workerman\Worker::monitorWorkers()
+#9 /home/myubuntu/Box/PhpTest/test/workerman/index.php(41): Workerman\Worker::runAll()
+#10 {main}
+2024-01-25 13:28:35 pid:16181 worker[none:16207] exit with status 64000
+2024-01-25 13:29:25 pid:16181 Workerman[index.php] stopping ...
+2024-01-25 13:29:25 pid:16181 Workerman[index.php] has been stopped
+2024-01-25 13:29:26 pid:16237 Workerman[index.php] start in DEBUG mode
+2024-01-25 13:33:52 pid:16237 Workerman[index.php] stopping ...
+2024-01-25 13:33:52 pid:16237 Workerman[index.php] has been stopped
+2024-01-25 13:34:01 pid:16329 Workerman[index.php] start in DEBUG mode
+2024-01-25 13:45:24 pid:16329 Workerman[index.php] stopping ...
+2024-01-25 13:45:26 pid:16329 Workerman[index.php] stopping ...
+2024-01-25 13:45:26 pid:16329 Workerman[index.php] has been stopped
+2024-01-26 13:40:25 pid:28481 Workerman[index.php] start in DEBUG mode
+2024-01-26 14:27:06 pid:28481 Workerman[index.php] stopping ...
+2024-01-26 14:27:07 pid:28481 Workerman[index.php] stopping ...
+2024-01-26 14:27:07 pid:28481 Workerman[index.php] has been stopped
+2024-01-26 14:32:06 pid:7797 Workerman[index.php] start in DEBUG mode
+2024-01-26 14:45:21 pid:7797 Workerman[index.php] stopping ...
+2024-01-26 14:45:21 pid:7797 Workerman[index.php] has been stopped
+2024-01-26 17:56:12 pid:4728 Workerman[index.php] start in DEBUG mode
+2024-01-26 19:58:34 pid:4728 Workerman[index.php] stopping ...
+2024-01-26 19:58:36 pid:4728 worker[none:4734] exit with status 9
+2024-01-26 19:58:36 pid:4728 Workerman[index.php] has been stopped
+2024-01-27 10:58:07 pid:5791 Workerman[index.php] start in DEBUG mode
+2024-01-27 11:33:43 pid:5791 Workerman[index.php] stopping ...
+2024-01-27 11:33:43 pid:5791 Workerman[index.php] has been stopped
+2024-02-02 11:42:22 pid:5095 Workerman[index.php] start in DEBUG mode
+2024-02-02 14:31:58 pid:5095 Workerman[index.php] stopping ...
+2024-02-02 14:32:00 pid:5095 Workerman[index.php] has been stopped
+2024-02-02 15:57:30 pid:4626 Workerman[index.php] start in DEBUG mode
+2024-02-02 16:39:31 pid:4626 Workerman[index.php] stopping ...
+2024-02-02 16:39:31 pid:4626 Workerman[index.php] has been stopped
+2024-02-03 10:09:05 pid:5074 Workerman[index.php] start in DEBUG mode
+2024-02-03 12:45:43 pid:5074 Workerman[index.php] stopping ...
+2024-02-03 12:45:44 pid:5074 Workerman[index.php] has been stopped
+2024-02-04 09:53:01 pid:4828 Workerman[index.php] start in DEBUG mode
+2024-02-04 11:20:39 pid:4828 Workerman[index.php] stopping ...
+2024-02-04 11:20:39 pid:4828 Workerman[index.php] has been stopped
+2024-02-05 18:42:07 pid:5340 Workerman[index.php] start in DEBUG mode
+2024-02-06 13:12:54 pid:6066 Workerman[index.php] start in DEBUG mode
+2024-02-06 14:35:12 pid:6066 Workerman[index.php] stopping ...
+2024-02-06 14:35:15 pid:6066 worker[none:6067] exit with status 9
+2024-02-06 14:35:15 pid:6066 Workerman[index.php] has been stopped
+2024-02-10 12:15:27 pid:4557 Workerman[index.php] start in DEBUG mode
+2024-02-10 14:15:44 pid:4557 Workerman[index.php] stopping ...
+2024-02-10 14:15:44 pid:4557 Workerman[index.php] has been stopped
+2024-02-10 18:31:07 pid:4913 Workerman[index.php] start in DEBUG mode
+2024-02-10 19:34:16 pid:4913 Workerman[index.php] stopping ...
+2024-02-10 19:34:16 pid:4913 Workerman[index.php] has been stopped
+2024-02-15 12:33:16 pid:5689 Workerman[index.php] start in DEBUG mode
+2024-02-15 17:56:58 pid:5689 Workerman[index.php] stopping ...
+2024-02-15 17:57:01 pid:5689 worker[none:5690] exit with status 9
+2024-02-15 17:57:01 pid:5689 Workerman[index.php] has been stopped
+2024-02-16 12:18:07 pid:12132 Workerman[index.php] start in DEBUG mode
+2024-02-16 16:13:44 pid:12132 Workerman[index.php] stopping ...
+2024-02-16 16:13:47 pid:12132 Workerman[index.php] stopping ...
+2024-02-16 16:13:49 pid:12132 worker[none:12133] exit with status 9
+2024-02-16 16:13:50 pid:12132 Workerman[index.php] has been stopped
+2024-02-17 10:42:42 pid:5991 Workerman[index.php] start in DEBUG mode
+2024-02-17 13:14:14 pid:5991 Workerman[index.php] stopping ...
+2024-02-17 13:14:16 pid:5991 Workerman[index.php] has been stopped
+2024-02-18 13:18:00 pid:6259 Workerman[index.php] start in DEBUG mode
+2024-02-18 14:47:24 pid:6259 Workerman[index.php] stopping ...
+2024-02-18 14:47:27 pid:6259 Workerman[index.php] has been stopped
+2024-02-19 13:07:48 pid:6219 Workerman[index.php] start in DEBUG mode
+2024-02-19 14:01:29 pid:6219 Workerman[index.php] stopping ...
+2024-02-19 14:01:29 pid:6219 Workerman[index.php] has been stopped
+2024-02-19 22:07:54 pid:5311 Workerman[index.php] start in DEBUG mode
+2024-02-20 01:26:29 pid:5311 Workerman[index.php] stopping ...
+2024-02-20 01:26:32 pid:5311 worker[none:5312] exit with status 9
+2024-02-20 01:26:32 pid:5311 Workerman[index.php] has been stopped
+2024-02-20 11:56:46 pid:6004 Workerman[index.php] start in DEBUG mode
+2024-02-20 14:05:59 pid:6004 Workerman[index.php] stopping ...
+2024-02-20 14:06:02 pid:6004 worker[none:6005] exit with status 9
+2024-02-20 14:06:02 pid:6004 Workerman[index.php] has been stopped
+2024-02-21 11:20:47 pid:5357 Workerman[index.php] start in DEBUG mode
+2024-02-21 15:19:07 pid:5357 Workerman[index.php] stopping ...
+2024-02-21 15:19:10 pid:5357 worker[none:5358] exit with status 9
+2024-02-21 15:19:10 pid:5357 Workerman[index.php] has been stopped

@@ -6,6 +6,12 @@
 parameters:
 
 services:
+
+    App\Security\AuthenticationFailureHandler:
+        tags:
+            - { name: 'monolog.logger', channel: 'security' }
+
+
     App\Entity\Chat:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'

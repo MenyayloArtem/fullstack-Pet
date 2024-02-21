@@ -17,11 +17,13 @@ security:
             lazy: true
             provider: app_user_provider
 
+
+            access_denied_handler: App\Security\AccessDeniedHandler
             custom_authenticators:
                 - App\Security\CustomAuth
 
-#            json_login:
-#                check_path : app_login
+            json_login:
+                check_path : app_login
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -31,9 +33,9 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
-#    access_control:
-#         - { path: "/upload", role: ROLE_USER, allow_if: "Unauthenticated" }
-#         - { path: "^/api/", role: ROLE_USER, allow_if: "Unauthenticated" }
+    access_control:
+         - { path: "/upload", role: ROLE_USER }
+         - { path: "^/api/", role: ROLE_USER }
 
 when@test:
     security:

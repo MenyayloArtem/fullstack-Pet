@@ -7,8 +7,11 @@ use App\Entity\ChatMessage;
 use App\Entity\Media;
 use App\Repository\AbstractMessageRepository;
 use App\Repository\ChatMemberRepository;
+use App\Repository\ChatMessageRepository;
 use App\Repository\UserRepository;
+use App\Service\ChatService;
 use App\Service\RequestService;
+use App\Shared\Routes;
 use Cassandra\Exception\UnauthorizedException;
 use Doctrine\DBAL\Driver\PDO\Exception;
 use Doctrine\ORM\EntityManager;
@@ -29,143 +32,43 @@ class ChatsController extends AbstractController
 {
 
     // Create chat
-    #[Route('/api/chat', name: 'app_chats', methods: ["POST"])]
-    public function index(
-        RequestService $requestService,
-        Security $security,
-        EntityManagerInterface $entityManager
-    ): JsonResponse
+    #[Route(Routes::chat, name: 'app_chats', methods: ["POST"])]
+    public function index(ChatService $chatService): JsonResponse {
+        return $this->json($chatService->createChat());
+    }
+
+    #[Route(Routes::chat, name: "chat_edit", methods: ["PATCH"])]
+    public function edit (ChatService $chatService) {
+        return $this->json($chatService->editChat());
+    }
+
+    #[Route(Routes::chatMessagesGet, name: "get_message", methods: ["POST"])]
+    public function getMessages(ChatService $chatService): JsonResponse
     {
-        extract($requestService->getPostBody());
-        // title, ?description, ?media_id
-        $chat = new Chat();
-        $chat->setTitle($title);
-        $chat->setDescription($description);
-        $user = $security->getToken()?->getUser();
-
-        if ($user) {
-            if ($media_id) {
-                $media = $entityManager->getRepository(Media::class)->find($media_id);
-
-                if ($media) {
-                    $chat->setIcon($media);
-                }
-            }
-
-            $chat->setOwner($user);
-
-            $entityManager->persist($chat);
-            $entityManager->flush();
-        } else {
-            return $this->json([
-               "message" => "Unauthorized"
-            ]);
-        }
-
-        return $this->json([
-            'message' => $chat,
-            'path' => 'src/Controller/ChatsController.php',
-        ]);
+        return $this->json($chatService->getMessages());
     }
 
-    // Edit chat
-    #[Route("/api/chat/{chatId}", name: "chat_edit", methods: ["PATCH"])]
-    public function edit (
-        RequestService $requestService,
-        EntityManagerInterface $entityManager,
-        SerializerInterface $serializer,
-        Request $request
-    ) {
-        $body = $requestService->getPostBody();
-
-        $payload = $body["payload"];
-
-        $title = $payload["title"] ?? null;
-        $description = $payload["description"] ?? null;
-
-        $currentUser = $this->getUser();
-
-        $chat = $entityManager->getRepository(Chat::class)->find($request->attributes->get("chatId"));
-
-        if (!($chat && $currentUser->getUserIdentifier() == $chat->getOwner()->getUserIdentifier())) throw new AccessDeniedHttpException("Access denied");
-
-            $chat->setTitle($title);
-
-            if ($description) $chat->setDescription($description);
-
-            if (isset($newChatBody["icon_id"])) {
-                $icon = $entityManager->getRepository(Media::class)->find($newChatBody["icon_id"]);
-
-                if ($icon) {
-                    $chat->setIcon($icon);
-                } else {
-                    throw new \Exception("Icon not found");
-                }
-            }
-
-            $entityManager->flush();
-
-            return $this->json($chat);
+    #[Route(Routes::searchChatMessages, name: "search_messages", methods: ["POST"])]
+    public function searchMessages(ChatService $chatService): JsonResponse
+    {
+        return $this->json($chatService->searchMessages());
     }
 
-    #[Route("/api/chat/{chatId}/message", name: "add_message", methods: ["POST"])]
-    public function sendMessage (
-        RequestService $requestService,
-        EntityManagerInterface $entityManager,
-        Request $request,
-        AbstractMessageRepository $messageRepository
-    ) : JsonResponse {
-        $chat = $entityManager->getRepository(Chat::class)->find($request->attributes->get("chatId"));
-
-        if (!$chat) throw new Exception("No chat");
-
-        $message = new ChatMessage();
-        $messageRepository->initMessage($message);
-        $message->setChat($chat);
-
-        $entityManager->persist($message);
-        $entityManager->flush();
-
-        return $this->json([
-            "id" => $message->getId(),
-            "sender" => $message->getSender(),
-            "content" => $message->getContent(),
-            "reply_message" => $message->getReplyMessage()
-        ]);
+    #[Route(Routes::chatMessage, name: "add_message", methods: ["POST"])]
+    public function sendMessage (ChatService $chatService) : JsonResponse {
+        return $this->json($chatService->sendMessage());
     }
 
-    #[Route("/api/chat/{chatId}/message", name: "edit_message", methods: ["PATCH"])]
-    public function editMessage(
-        RequestService $requestService,
-        EntityManagerInterface $entityManager,
-        AbstractMessageRepository $messageRepository,
-        Request $request
-    ) : JsonResponse {
-
-        $body = $requestService->getPostBody();
-        $messageId = $body["message_id"];
-
-        if (!$messageId) throw new \Exception("No message id provided");
-
-        $message = $entityManager->getRepository(ChatMessage::class)->find($messageId);
-        if ($message->getChat()->getId() !== $request->attributes->get("chatId")) throw new AccessDeniedException();
-
-        $messageRepository->updateMessage($message);
-
-        $entityManager->flush();
-        return $this->json($message);
+    /**
+     * @throws \Exception
+     */
+    #[Route(Routes::chatMessage, name: "edit_message", methods: ["PATCH"])]
+    public function editMessage(ChatService $chatService) : JsonResponse {
+        return $this->json($chatService->editMessage());
     }
 
-    #[Route("/api/chat/{chatId}/membership", methods: ["GET"])]
-    public function checkMembership (
-        ChatMemberRepository $memberRepository,
-        RequestService $requestService,
-        Request $request,
-        EntityManagerInterface $entityManager
-    ) : JsonResponse {
-        $chatId = $request->attributes->get("chatId");
-        $chat = $entityManager->getRepository(Chat::class)->find($chatId);
-
-        return $this->json($memberRepository->checkMembership($chat));
+    #[Route(Routes::chatMembership, methods: ["GET"])]
+    public function checkMembership (ChatService $chatService) : JsonResponse {
+        return $this->json($chatService->checkMembership());
     }
 }

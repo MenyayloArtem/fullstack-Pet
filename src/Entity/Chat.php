@@ -3,32 +3,25 @@
 namespace App\Entity;
 
 use App\Repository\ChatRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: ChatRepository::class)]
 class Chat
 {
 
-
-    private $entityManager;
     public function __construct(
-        EntityManagerInterface $entityManager,
-        private readonly ChatRepository $chatRepository
+        private readonly int $entityManager
     )
     {
         $this->members_count = 1;
-        $this->chatMembers = new ArrayCollection();
-        $this->entityManager = $entityManager;
     }
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["public", "message"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -47,9 +40,6 @@ class Chat
     #[ORM\Column]
     #[NotBlank]
     private int $members_count;
-
-    #[ORM\ManyToMany(targetEntity: ChatMember::class, mappedBy: 'chat')]
-    private Collection $chatMembers;
 
     public function getId(): ?int
     {
@@ -98,7 +88,7 @@ class Chat
      */
     public function getMembers(): array
     {
-        return $this->chatRepository->getMembers($this->getId());
+        return [];
     }
 
     public function addMember(User $member): ChatMember
@@ -108,15 +98,6 @@ class Chat
         $chatMember->setChat($this);
 
         return $chatMember;
-    }
-
-    public function removeChatMember(ChatMember $chatMember): static
-    {
-        if ($this->chatMembers->removeElement($chatMember)) {
-            $chatMember->removeChat($this);
-        }
-
-        return $this;
     }
 
     public function setOwner (User $owner): void
@@ -137,5 +118,14 @@ class Chat
     public function incrementMembersCount(): int
     {
         return $this->members_count+=1;
+    }
+
+    public function decrementMembersCount(): int
+    {
+        if ($this->members_count - 1 > 0) {
+            return $this->members_count-=1;
+        } else {
+            return $this->members_count;
+        }
     }
 }

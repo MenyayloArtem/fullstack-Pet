@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\ChatMember;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -54,8 +55,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->createQueryBuilder("cm")
             ->select("c")
             ->from("App\\Entity\\Chat", "c")
-            ->innerJoin("cm.member", "m")
-            ->where("m.username = :username")
+            ->join("cm.member", "m")
+            ->where("m.username = :username AND cm.chat = c")
+            ->orderBy("c.id","ASC")
             ->setParameter("username", $user->getUserIdentifier())
             ->getQuery()
             ->getResult();

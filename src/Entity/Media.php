@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\MediaRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
@@ -12,13 +13,16 @@ class Media
     public function __construct()
     {
         $this->public = false;
+        $this->props = [];
     }
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["public", "message"])]
     private ?int $id = null;
 
+    #[Groups(["public", "message"])]
     #[ORM\Column(length: 31)]
     private ?string $type = null;
 
@@ -31,6 +35,10 @@ class Media
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[NotBlank]
     private User $sender;
+
+    #[ORM\Column(type: "json")]
+    #[Groups(["public", "message"])]
+    private $props = [];
 
     public function getSender(): User
     {
@@ -57,6 +65,15 @@ class Media
         $this->public = $public;
     }
 
+    public function setProps(mixed $props)
+    {
+       $this->props = $props;
+    }
+
+    public function getProps(): array
+    {
+        return $this->props;
+    }
     public function getId(): ?int
     {
         return $this->id;

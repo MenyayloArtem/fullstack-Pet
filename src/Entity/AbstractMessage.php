@@ -5,12 +5,16 @@ namespace App\Entity;
 use App\Repository\AbstractMessageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\SerializerInterface;
 
 
 abstract class AbstractMessage
 {
 
-    public function __construct()
+    public function __construct(
+
+    )
     {
         $this->date_created = new \DateTime();
     }
@@ -30,13 +34,15 @@ abstract class AbstractMessage
     protected ?User $sender = null;
 
     #[ORM\Column(nullable: true)]
-    protected ?array $medias = null;
+    protected ?array $medias = [];
 
+    #[Groups("message")]
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    #[Groups("message")]
     public function getContent(): ?string
     {
         return $this->content;
@@ -49,6 +55,7 @@ abstract class AbstractMessage
         return $this;
     }
 
+    #[Groups("message")]
     public function getDateCreated(): ?\DateTimeInterface
     {
         return $this->date_created;
@@ -61,6 +68,7 @@ abstract class AbstractMessage
         return $this;
     }
 
+    #[Groups("message")]
     public function getSender(): ?User
     {
         return $this->sender;
@@ -73,6 +81,7 @@ abstract class AbstractMessage
         return $this;
     }
 
+    #[Groups("message")]
     public function getMedias(): ?array
     {
         return $this->medias;

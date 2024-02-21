@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -15,11 +17,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["public", "message"])]
     private ?int $id = null;
 
+    #[Groups("public")]
     #[ORM\Column(length: 180, unique: true, nullable: false)]
     private ?string $email = null;
 
+    #[Groups(["public", "message"])]
     #[ORM\Column(length: 180, unique: true, nullable: false)]
     private string $username;
 
@@ -33,12 +38,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
     }
 
+    #[Ignore]
     #[ORM\Column]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
+    #[Ignore]
     #[ORM\Column]
     #[SerializedName("password")]
     private ?string $password = null;

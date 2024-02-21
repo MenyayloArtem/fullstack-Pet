@@ -12,6 +12,7 @@ use Doctrine\DBAL\Driver\PDO\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Persistence\ManagerRegistry;
+use PhpParser\Error;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -53,14 +54,22 @@ class AbstractMessageRepository extends ServiceEntityRepository
     /**
      * @throws Exception
      */
-    public function initMessage (AbstractMessage $message) {
+    public function initMessage (ChatMessage $message): array
+    {
         $user = $this->security->getUser();
         $body = $this->requestService->getPostBody();
 
-        $text = $body["text"] ?? "";
-        $media_ids = $body["media_ids"] ?? [];
-        $reply_id = $body["reply_id"] ?? null;
+        $msg = $body["message"];
+        $text = $msg["text"] ?? "";
+        $media_ids = $msg["media_ids"] ?? [];
+        $reply_id = $msg["reply_id"] ?? null;
 
+        if ($text == "error") {
+            throw new Error("test error");
+        }
+
+
+        $medias = [];
         if ($text || ($media_ids && count($media_ids))) {
 
             $message->setSender($user);
@@ -110,14 +119,20 @@ class AbstractMessageRepository extends ServiceEntityRepository
         if (!$message) throw new EntityNotFoundException("Message not found");
         if (!$this->isSender($message)) throw new AccessDeniedException("Access denied");
 
-        $payload = $body["payload"];
+        $payload = $body["message"];
 
         $text = $payload["text"] ?? "";
-        $medias = $payload["medias"] ?? [];
+        $media_ids = $payload["media_ids"] ?? [];
 
 
         if ($text) $message->setContent($text);
-        if(!empty($medias)) $message->setMedias($medias);
+        if(!empty($media_ids)) {
+            $message->setMedias($media_ids);
+        } else {
+            $message->setMedias([]);
+        };
+
+
 
         return $message;
 

@@ -2,10 +2,15 @@
 
 namespace App\Repository;
 
+use App\Entity\Chat;
+use App\Entity\ChatMember;
 use App\Entity\ChatMessage;
+use App\Entity\Media;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @extends ServiceEntityRepository<ChatMessage>
@@ -17,11 +22,49 @@ use Symfony\Bundle\SecurityBundle\Security;
  */
 class ChatMessageRepository extends ServiceEntityRepository
 {
-    private Security $security;
-    public function __construct(ManagerRegistry $registry, Security $security)
+    private EntityManagerInterface $entityManager;
+    public function __construct(ManagerRegistry $registry, Security $security,
+    private readonly SerializerInterface $serializer
+    )
     {
         parent::__construct($registry, ChatMessage::class);
         $this->security = $security;
+    }
+
+    public function getMessages (int $chatId, ?int $page): array
+    {
+        $messagesPerPage = 15;
+        $em = $this->getEntityManager();
+        $chat = $em->getRepository(Chat::class)->find($chatId);
+
+        if ($page) {
+            $res = $em->getRepository(ChatMessage::class)->findBy(
+                ["chat" => $chat],
+                ["date_created" => "DESC"],
+                $messagesPerPage,
+                $messagesPerPage * ($page - 1) + ($page === 1 ? 0 : 1)
+            );
+        } else {
+            $res = $em->getRepository(ChatMessage::class)->findBy(
+                ["chat" => $chat]
+            );
+        }
+
+
+        foreach ($res as $message) {
+            $media_ids = $message->getMedias();
+
+            if ($media_ids) {
+                $medias = $em->getRepository(Media::class)->findBy(["id" => $media_ids]);
+                $message->setMedias($medias);
+            }
+        }
+
+        $mapMessage = function (ChatMessage $message) {
+            return json_decode($this->serializer->serialize($message,"json",["groups" => "message"]));
+        };
+        return array_map($mapMessage, array_reverse($res));
+//        return array_reverse($res);
     }
 
 //    /**

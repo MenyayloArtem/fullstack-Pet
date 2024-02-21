@@ -12,7 +12,6 @@ use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserController extends AbstractController
 {
@@ -27,14 +26,27 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route("/api/users", name: "all_users", methods: ["GET"])]
+    public function getAllUsers(EntityManagerInterface $entityManager) : JsonResponse
+    {
+        return $this->json($entityManager->getRepository(User::class)->findAll());
+    }
+
+    #[Route("/api/user", name: "get_current_user", methods: ["GET"])]
+    public function getCurrentUser(
+    ) : JsonResponse
+    {
+        return $this->json($this->getUser());
+    }
 
     #[Route("/api/user/{userId}", name: "user_get", methods: ["GET"])]
     public function getUserById (
         Request $request,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): JsonResponse
     {
         $user = $entityManager->getRepository(User::class)->find($request->attributes->get("userId"));
+        return $this->json($user);
 
         if (!$user) throw new EntityNotFoundException();
 

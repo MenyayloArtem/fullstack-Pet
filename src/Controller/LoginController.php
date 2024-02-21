@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Service\CheckRole;
 use App\Service\RequestService;
+use App\Shared\Routes;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,37 +24,28 @@ class LoginController extends AbstractController
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    #[Route('/login', name: 'app_login', methods: ["POST"])]
+    #[Route(path: Routes::login, name: 'app_login', methods: ["POST"])]
     public function index(CheckRole $checkRole,
     RequestService $requestService,
     EntityManagerInterface $entityManager,
     UserPasswordHasherInterface $hasher
-    ): JsonResponse|Passport
+    ): JsonResponse
     {
 
-        $body = $requestService->getPostBody();
-        $username = $body["username"];
-        $password = $body["password"];
+        return $this->json([
+            "user" => $this->getUser(),
+            "isAdmin" => $this->isGranted("ROLE_ADMIN")
+        ]);
+    }
 
-        $user = $entityManager->getRepository(User::class)->findOneBy(["username" => $username]);
+    #[Route(path: Routes::logout, name: 'app_logout', methods: ["POST"])]
+    public function logout(Security $security
+    ): JsonResponse
+    {
 
-        if (!$user) throw new \Exception("sdds");
-
-//        $hashedPassword = $user->getPassword();
-
-        $compared = $hasher->isPasswordValid($user, $password);
-
-        if ($compared) {
-            return new Passport(
-                new UserBadge($user->getUserIdentifier()),
-                new PasswordCredentials($password)
-            );
-        }
-         else {
-            return $this->json([
-                "error" => "error"
-            ]);
-        }
-
+        $security->logout(false);
+        return $this->json([
+            "message" => "Ok"
+        ]);
     }
 }

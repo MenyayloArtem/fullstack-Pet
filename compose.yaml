@@ -20,4 +20,4 @@ volumes:
   database_data:
 ###< doctrine/doctrine-bundle ###
 
-  echo "deb https://debian.cassandra.apache.org 41x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list deb https://debian.cassandra.apache.org 41x main
+#  echo "deb https://debian.cassandra.apache.org 41x main" | sudo tee -a /etc/apt/sources.list.d/cassandra.sources.list deb https://debian.cassandra.apache.org 41x main
